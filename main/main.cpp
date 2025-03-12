@@ -6,8 +6,18 @@
 
 int SDL_main(int argc, char* argv[]) 
 {
-    Maze2D maze("maze.txt");
-    Path1D path("path.txt");
+    if(argc < 3) 
+    {
+        std::cerr << "Use it with executable followed by maze file and path file name with extensions >>> " << argv[0] << " <maze file> <path file>" << std::endl;
+
+        return 1;
+    }
+
+    std::string mazeFile = argv[1];
+    std::string pathFile = argv[2];
+
+    Maze2D maze(mazeFile);
+    Path1D path(pathFile);
 
     std::vector<Point2D> pathTrace;
 
@@ -25,7 +35,9 @@ int SDL_main(int argc, char* argv[])
     Renderer renderer(640, 480);
 
     renderer.drawMaze(maze);
+    
     renderer.animatePath(convertedPath, valid, maze);
     
     return 0; 
 }
+
