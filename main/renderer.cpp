@@ -3,6 +3,8 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <set>
+#include <algorithm>
 #include <cmath>
 
 Renderer::Renderer(int width, int height) 
@@ -12,7 +14,7 @@ Renderer::Renderer(int width, int height)
 
     if(SDL_Init(SDL_INIT_VIDEO) != 0) 
     {
-        std::cerr << "SDL Initialization Failed: " << SDL_GetError() << std::endl;
+        std::cerr << "SDL couldn't be initialized >>> " << SDL_GetError() << std::endl;
 
         exit(1);
     }
@@ -21,7 +23,7 @@ Renderer::Renderer(int width, int height)
 
     if(!window) 
     {
-        std::cerr << "Window Creation Failed: " << SDL_GetError() << std::endl;
+        std::cerr << "Window couldn't be created >>>" << SDL_GetError() << std::endl;
 
         SDL_Quit();
 
@@ -32,7 +34,7 @@ Renderer::Renderer(int width, int height)
 
     if(!renderer) 
     {
-        std::cerr << "Renderer Creation Failed: " << SDL_GetError() << std::endl;
+        std::cerr << "Renderer couldn't be created >>> " << SDL_GetError() << std::endl;
 
         SDL_DestroyWindow(window);
 
@@ -60,7 +62,6 @@ Renderer::~Renderer()
 void Renderer::drawMaze(const Maze2D& maze) 
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
     SDL_RenderClear(renderer);
 
     int mazeRows = maze.getRows();
@@ -83,11 +84,11 @@ void Renderer::drawMaze(const Maze2D& maze)
 
             if(!maze.isValidMove(i, j)) 
             {  
-                SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); // Walls (gray)
+                SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); //GREY
             } 
             else 
             {
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Open paths (white)
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); //WHITE
             }
 
             SDL_RenderFillRect(renderer, &cell);
@@ -121,7 +122,10 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
     float cellWidth = static_cast<float>(windowWidth) / mazeCols;
     float cellHeight = static_cast<float>(windowHeight) / mazeRows;
 
-    bool reachedInvalid = false; 
+    std::vector<std::pair<int, int>> visited;
+
+    int cellW = static_cast<int>(std::ceil(cellWidth));  
+    int cellH = static_cast<int>(std::ceil(cellHeight));
 
     for(size_t i = 0; i < pathTrace.size(); ++i) 
     {
@@ -131,26 +135,37 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
         int cellX = static_cast<int>(std::floor(y * cellWidth));
         int cellY = static_cast<int>(std::floor(x * cellHeight));
 
-        int cellW = static_cast<int>(std::ceil((y + 1) * cellWidth)) - cellX;
-        int cellH = static_cast<int>(std::ceil((x + 1) * cellHeight)) - cellY;
-
         SDL_Rect cell = { cellX, cellY, cellW, cellH };
 
-        if(!reachedInvalid && !maze.isValidMove(x, y)) 
-        {
-            reachedInvalid = true;
-        }
+        auto it = std::find(visited.begin(), visited.end(), std::make_pair(x, y));
 
-        if(reachedInvalid) 
+        if(it != visited.end()) 
         {
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red for invalid path
+            while(!visited.empty() && visited.back() != std::make_pair(x, y)) 
+            {
+                auto last = visited.back();
+                visited.pop_back();
+
+                int lastX = static_cast<int>(std::floor(last.second * cellWidth));
+                int lastY = static_cast<int>(std::floor(last.first * cellHeight));
+
+                SDL_Rect lastCell = { lastX, lastY, cellW, cellH };
+
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); //WHITE
+                SDL_RenderFillRect(renderer, &lastCell);
+                SDL_RenderPresent(renderer);
+                SDL_Delay(100);
+            }
         } 
         else 
         {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); // Blue for normal path
+            visited.push_back(std::make_pair(x, y));
         }
 
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); //BLUE
+
         SDL_RenderFillRect(renderer, &cell);
+
         SDL_RenderPresent(renderer);
 
         SDL_Delay(100);
@@ -158,16 +173,13 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
 
     SDL_SetRenderDrawColor(renderer, isValid ? 0 : 255, isValid ? 255 : 0, 0, 255);
 
-    for(size_t i = 0; i < pathTrace.size(); ++i) 
+    for (const auto& pos : visited) 
     {
-        int x = pathTrace[i].first;
-        int y = pathTrace[i].second;
+        int x = pos.first;
+        int y = pos.second;
 
         int cellX = static_cast<int>(std::floor(y * cellWidth));
         int cellY = static_cast<int>(std::floor(x * cellHeight));
-
-        int cellW = static_cast<int>(std::ceil((y + 1) * cellWidth)) - cellX;
-        int cellH = static_cast<int>(std::ceil((x + 1) * cellHeight)) - cellY;
 
         SDL_Rect cell = { cellX, cellY, cellW, cellH };
 
