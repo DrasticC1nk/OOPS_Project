@@ -1,0 +1,92 @@
+Test Run Log 
+==================== 
+Processing folder: C:\oops_project\load\Test00_FilesDontExistOrWrongFormat 
+-------------------- 
+No path file found in C:\oops_project\load\Test00_FilesDontExistOrWrongFormat. Skipping... 
+ 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Path file couldn't be oppened >>> path.txt
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test01_NormalCase_GOOD 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Valid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test02_RevisitingCell 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Valid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test03_RevisitingCell 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Valid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test04_RevisitingCell 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Valid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test05_NonzerosInPathAfter0 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Error >>> Path does not end at (3, 3).
+Invalid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test06_InvalidContentsInMazeFile_OtherThan0or1 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Invalid character '2' in maze file. Only '0' and '1' are allowed.
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test07_InvalidContentsInMazeFile_TopLeftIs0 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Error >>> Maze must start at (0,0) with '1' (open path).
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test08_InvalidContentsInPathFile 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Invalid move '5' in path file. Allowed values: 1 (up), 2 (right), 3 (down), 4 (left).
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test09_InvalidPathTerminatingElsewhere 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Error >>> Path does not end at (3, 3).
+Invalid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test10_InvalidPathHavingMoreNonZeroEntriesEvenAfterReachingEndofMaze 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Error >>> Path does not end at (3, 3).
+Invalid Path!
+ 
+-------------------- 
+ 
+Processing folder: C:\oops_project\load\Test11_InvalidPathVisitingAnInvalidCell 
+-------------------- 
+Running: "C:\oops_project\src\bin\maze.exe" "maze.txt" "path.txt" 
+Error >>> Path hits a wall or goes out of bounds at (0, 2).
+Invalid Path!
+ 
+-------------------- 
+ 
