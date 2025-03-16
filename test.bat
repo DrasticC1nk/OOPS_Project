@@ -2,9 +2,9 @@
 setlocal enabledelayedexpansion
 
 :: Define paths
-set "TEST_FOLDER=C:\oops_project\load"
-set "LOGFILE=C:\clone\oops_project\log.txt"
-set "PROGRAM_PATH=C:\oops_project\src\bin\maze.exe"
+set "TEST_FOLDER=load"
+set "LOGFILE=log.txt"
+set "PROGRAM_PATH=src\bin\maze.exe"
 
 :: Ensure log file is created
 echo Test Run Log > "%LOGFILE%"
