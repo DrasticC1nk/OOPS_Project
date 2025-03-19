@@ -2,7 +2,7 @@ Please follow the steps below to build and run my program but first the pre-requ
 
 Here is a quick guide to setup my compiler:-
 
-1. Use this direct link to dowload the compiler with POSIX threads(release 2) >>> [text](https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-ucrt-r2/winlibs-x86_64-posix-seh-gcc-14.2.0-llvm-19.1.1-mingw-w64ucrt-12.0.0-r2.zip) 
+1. Use this direct link to dowload the compiler with POSIX threads(release 2) >>> [Link to my compiler](https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.1-12.0.0-ucrt-r2/winlibs-x86_64-posix-seh-gcc-14.2.0-llvm-19.1.1-mingw-w64ucrt-12.0.0-r2.zip) 
 
 2. Once downloaded, extract and place the folder in your desired directory and volume. 
 
