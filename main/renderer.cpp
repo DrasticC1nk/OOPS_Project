@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cmath>
 
+using namespace std;
+
 Renderer::Renderer(int width, int height) 
 {
     windowWidth = width;
@@ -14,7 +16,7 @@ Renderer::Renderer(int width, int height)
 
     if(SDL_Init(SDL_INIT_VIDEO) != 0) 
     {
-        std::cerr << "SDL couldn't be initialized >>> " << SDL_GetError() << std::endl;
+        cerr << "SDL couldn't be initialized >>> " << SDL_GetError() << endl;
 
         exit(1);
     }
@@ -23,7 +25,7 @@ Renderer::Renderer(int width, int height)
 
     if(!window) 
     {
-        std::cerr << "Window couldn't be created >>>" << SDL_GetError() << std::endl;
+        cerr << "Window couldn't be created >>>" << SDL_GetError() << endl;
 
         SDL_Quit();
 
@@ -34,7 +36,7 @@ Renderer::Renderer(int width, int height)
 
     if(!renderer) 
     {
-        std::cerr << "Renderer couldn't be created >>> " << SDL_GetError() << std::endl;
+        cerr << "Renderer couldn't be created >>> " << SDL_GetError() << endl;
 
         SDL_DestroyWindow(window);
 
@@ -74,11 +76,11 @@ void Renderer::drawMaze(const Maze2D& maze)
     {
         for(int j = 0; j < mazeCols; ++j) 
         {
-            int cellX = static_cast<int>(std::floor(j * cellWidth));
-            int cellY = static_cast<int>(std::floor(i * cellHeight));
+            int cellX = static_cast<int>(floor(j * cellWidth));
+            int cellY = static_cast<int>(floor(i * cellHeight));
 
-            int cellW = static_cast<int>(std::ceil((j + 1) * cellWidth)) - cellX;
-            int cellH = static_cast<int>(std::ceil((i + 1) * cellHeight)) - cellY;
+            int cellW = static_cast<int>(ceil((j + 1) * cellWidth)) - cellX;
+            int cellH = static_cast<int>(ceil((i + 1) * cellHeight)) - cellY;
 
             SDL_Rect cell = { cellX, cellY, cellW, cellH };
 
@@ -99,14 +101,14 @@ void Renderer::drawMaze(const Maze2D& maze)
 
     for(int j = 1; j < mazeCols; ++j) 
     {
-        int x = static_cast<int>(std::round(j * cellWidth));
+        int x = static_cast<int>(round(j * cellWidth));
 
         SDL_RenderDrawLine(renderer, x, 0, x, windowHeight);
     }
 
     for(int i = 1; i < mazeRows; ++i) 
     {
-        int y = static_cast<int>(std::round(i * cellHeight));
+        int y = static_cast<int>(round(i * cellHeight));
 
         SDL_RenderDrawLine(renderer, 0, y, windowWidth, y);
     }
@@ -114,7 +116,7 @@ void Renderer::drawMaze(const Maze2D& maze)
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bool isValid, const Maze2D& maze) 
+void Renderer::animatePath(const vector<pair<int, int>>& pathTrace, bool isValid, const Maze2D& maze) 
 {
     int mazeRows = maze.getRows();
     int mazeCols = maze.getCols();
@@ -122,32 +124,32 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
     float cellWidth = static_cast<float>(windowWidth) / mazeCols;
     float cellHeight = static_cast<float>(windowHeight) / mazeRows;
 
-    std::vector<std::pair<int, int>> visited;
+    vector<pair<int, int>> visited;
 
-    int cellW = static_cast<int>(std::ceil(cellWidth));  
-    int cellH = static_cast<int>(std::ceil(cellHeight));
+    int cellW = static_cast<int>(ceil(cellWidth));  
+    int cellH = static_cast<int>(ceil(cellHeight));
 
     for(size_t i = 0; i < pathTrace.size(); ++i) 
     {
         int x = pathTrace[i].first;
         int y = pathTrace[i].second;
 
-        int cellX = static_cast<int>(std::floor(y * cellWidth));
-        int cellY = static_cast<int>(std::floor(x * cellHeight));
+        int cellX = static_cast<int>(floor(y * cellWidth));
+        int cellY = static_cast<int>(floor(x * cellHeight));
 
         SDL_Rect cell = { cellX, cellY, cellW, cellH };
 
-        auto it = std::find(visited.begin(), visited.end(), std::make_pair(x, y));
+        auto it = find(visited.begin(), visited.end(), make_pair(x, y));
 
         if(it != visited.end()) 
         {
-            while(!visited.empty() && visited.back() != std::make_pair(x, y)) 
+            while(!visited.empty() && visited.back() != make_pair(x, y)) 
             {
                 auto last = visited.back();
                 visited.pop_back();
 
-                int lastX = static_cast<int>(std::floor(last.second * cellWidth));
-                int lastY = static_cast<int>(std::floor(last.first * cellHeight));
+                int lastX = static_cast<int>(floor(last.second * cellWidth));
+                int lastY = static_cast<int>(floor(last.first * cellHeight));
 
                 SDL_Rect lastCell = { lastX, lastY, cellW, cellH };
 
@@ -159,7 +161,7 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
         } 
         else 
         {
-            visited.push_back(std::make_pair(x, y));
+            visited.push_back(make_pair(x, y));
         }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255); //BLUE
@@ -178,8 +180,8 @@ void Renderer::animatePath(const std::vector<std::pair<int, int>>& pathTrace, bo
         int x = pos.first;
         int y = pos.second;
 
-        int cellX = static_cast<int>(std::floor(y * cellWidth));
-        int cellY = static_cast<int>(std::floor(x * cellHeight));
+        int cellX = static_cast<int>(floor(y * cellWidth));
+        int cellY = static_cast<int>(floor(x * cellHeight));
 
         SDL_Rect cell = { cellX, cellY, cellW, cellH };
 

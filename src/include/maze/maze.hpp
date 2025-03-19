@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 struct Point2D 
 {
     int x, y;
@@ -17,11 +19,11 @@ private:
 
     int rows, cols;
     
-    std::vector<std::vector<int>> grid;
+    vector<vector<int>> grid;
 
 public:
 
-    explicit Maze2D(const std::string& filename);
+    explicit Maze2D(const string& filename);
 
     bool isValidMove(int x, int y) const;
 
@@ -30,20 +32,20 @@ public:
 
     void printMaze() const;
 
-    const std::vector<std::vector<int>>& getGrid() const { return grid; }
+    const vector<vector<int>>& getGrid() const { return grid; }
 };
 
 class Path1D 
 {
 private:
 
-    std::vector<int> moves;
+    vector<int> moves;
 
 public:
 
-    explicit Path1D(const std::string& filename);
+    explicit Path1D(const string& filename);
 
-    bool isValidPath(const Maze2D& maze, std::vector<Point2D>& pathTrace) const;
+    bool isValidPath(const Maze2D& maze, vector<Point2D>& pathTrace) const;
 };
 
 #endif
