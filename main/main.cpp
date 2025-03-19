@@ -4,33 +4,35 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
+using namespace std;
+
 int SDL_main(int argc, char* argv[]) 
 {
     if(argc < 3) 
     {
-        std::cerr << "Use it with executable followed by maze file and path file name with extensions >>> " << argv[0] << " <maze file> <path file>" << std::endl;
+        cerr << "Use it with executable followed by maze file and path file name with extensions >>> " << argv[0] << " <maze file> <path file>" << endl;
 
         return 1;
     }
 
-    std::string mazeFile = argv[1];
-    std::string pathFile = argv[2];
+    string mazeFile = argv[1];
+    string pathFile = argv[2];
 
     Maze2D maze(mazeFile);
     Path1D path(pathFile);
 
-    std::vector<Point2D> pathTrace;
+    vector<Point2D> pathTrace;
 
     bool valid = path.isValidPath(maze, pathTrace);
 
-    std::vector<std::pair<int, int>> convertedPath;
+    vector<pair<int, int>> convertedPath;
 
     for(const auto& point : pathTrace) 
     {
         convertedPath.push_back({point.x, point.y});
     }
 
-    std::cout << (valid ? "Valid Path!" : "Invalid Path!") << std::endl;
+    cout << (valid ? "Valid Path!" : "Invalid Path!") << endl;
 
     Renderer renderer(640, 480);
 

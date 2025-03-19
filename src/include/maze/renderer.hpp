@@ -7,6 +7,8 @@
 
 #include "maze.hpp"  
 
+using namespace std;
+
 class Renderer 
 {
 private:

@@ -6,36 +6,38 @@
 #include <cstdlib>
 #include <sstream>
 
-bool isValidFileFormat(const std::string& filename) 
+using namespace std;
+
+bool isValidFileFormat(const string& filename) 
 {
     return (filename.size() > 4 && (filename.substr(filename.size() - 4) == ".txt" || filename.substr(filename.size() - 4) == ".dat"));
 }
 
-Maze2D::Maze2D(const std::string& filename) 
+Maze2D::Maze2D(const string& filename) 
 {
     if(!isValidFileFormat(filename)) 
     {
-        std::cerr << "Error >>> Invalid file format for '" << filename << "'. Only .txt or .dat files are allowed.\n";
+        cerr << "Error >>> Invalid file format for '" << filename << "'. Only .txt or .dat files are allowed.\n";
 
         exit(1);
     }
 
-    std::ifstream file("load/" + filename, std::ios::binary); 
+    ifstream file("load/" + filename, ios::binary); 
 
     if(!file) 
     {
-        std::cerr << "Maze file couldn't be oppened >>> " << filename << "\n";
+        cerr << "Maze file couldn't be oppened >>> " << filename << "\n";
 
         exit(1);
     }
 
-    std::string line;
-    std::vector<std::vector<int>> tempGrid;
+    string line;
+    vector<vector<int>> tempGrid;
 
-    while(std::getline(file, line)) 
+    while(getline(file, line)) 
     {
-        std::vector<int> row;
-        std::istringstream iss(line);
+        vector<int> row;
+        istringstream iss(line);
 
         char cell;
 
@@ -43,7 +45,7 @@ Maze2D::Maze2D(const std::string& filename)
         {
             if (cell != '0' && cell != '1') 
             {
-                std::cerr << "Invalid character '" << cell << "' in maze file. Only '0' and '1' are allowed.\n";
+                cerr << "Invalid character '" << cell << "' in maze file. Only '0' and '1' are allowed.\n";
 
                 exit(1);
             }
@@ -61,7 +63,7 @@ Maze2D::Maze2D(const std::string& filename)
 
     if(tempGrid.empty()) 
     {
-        std::cerr << "Error >>> Maze file is empty or improperly formatted.\n";
+        cerr << "Error >>> Maze file is empty or improperly formatted.\n";
 
         exit(1);
     }
@@ -73,7 +75,7 @@ Maze2D::Maze2D(const std::string& filename)
     {
         if(row.size() != cols) 
         {
-            std::cerr << "Error >>> Inconsistent row lengths in maze file.\n";
+            cerr << "Error >>> Inconsistent row lengths in maze file.\n";
 
             exit(1);
         }
@@ -81,12 +83,12 @@ Maze2D::Maze2D(const std::string& filename)
 
     if(tempGrid[0][0] == 0) 
     {
-        std::cerr << "Error >>> Maze must start at (0,0) with '1' (open path).\n";
+        cerr << "Error >>> Maze must start at (0,0) with '1' (open path).\n";
 
         exit(1);
     }
 
-    grid = std::move(tempGrid);
+    grid = move(tempGrid);
 }
 
 bool Maze2D::isValidMove(int x, int y) const 
@@ -103,27 +105,27 @@ void Maze2D::printMaze() const
     {
         for(int cell : row) 
         {
-            std::cout << (cell ? "1 " : "0 ");
+            cout << (cell ? "1 " : "0 ");
         }
 
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
-Path1D::Path1D(const std::string& filename) 
+Path1D::Path1D(const string& filename) 
 {
     if(!isValidFileFormat(filename)) 
     {
-        std::cerr << "Error >>> Invalid file format for '" << filename << "'. Only .txt or .dat files are allowed.\n";
+        cerr << "Error >>> Invalid file format for '" << filename << "'. Only .txt or .dat files are allowed.\n";
 
         exit(1);
     }
 
-    std::ifstream file("load/" + filename, std::ios::binary); 
+    ifstream file("load/" + filename, ios::binary); 
 
     if(!file) 
     {
-        std::cerr << "Path file couldn't be oppened >>> " << filename << "\n";
+        cerr << "Path file couldn't be oppened >>> " << filename << "\n";
 
         exit(1);
     }
@@ -134,7 +136,7 @@ Path1D::Path1D(const std::string& filename)
     {
         if(move < 1 || move > 4) 
         {
-            std::cerr << "Invalid move '" << move << "' in path file. Allowed values: 1 (up), 2 (right), 3 (down), 4 (left).\n";
+            cerr << "Invalid move '" << move << "' in path file. Allowed values: 1 (up), 2 (right), 3 (down), 4 (left).\n";
 
             exit(1);
         }
@@ -144,7 +146,7 @@ Path1D::Path1D(const std::string& filename)
 
     if(file.fail() && !file.eof()) 
     {
-        std::cerr << "Error >>> Path file contains non-numeric characters.\n";
+        cerr << "Error >>> Path file contains non-numeric characters.\n";
 
         exit(1);
     }
@@ -152,7 +154,7 @@ Path1D::Path1D(const std::string& filename)
     file.close();
 }
 
-bool Path1D::isValidPath(const Maze2D& maze, std::vector<Point2D>& pathTrace) const 
+bool Path1D::isValidPath(const Maze2D& maze, vector<Point2D>& pathTrace) const 
 {
     Point2D pos(0, 0);
 
@@ -181,7 +183,7 @@ bool Path1D::isValidPath(const Maze2D& maze, std::vector<Point2D>& pathTrace) co
 
         if(!maze.isValidMove(newX, newY)) 
         {
-            std::cerr << "Error >>> Path hits a wall or goes out of bounds at (" << newX << ", " << newY << ").\n";
+            cerr << "Error >>> Path hits a wall or goes out of bounds at (" << newX << ", " << newY << ").\n";
 
             return false;
         }
@@ -194,7 +196,7 @@ bool Path1D::isValidPath(const Maze2D& maze, std::vector<Point2D>& pathTrace) co
 
     if(pos.x != maze.getRows() - 1 || pos.y != maze.getCols() - 1) 
     {
-        std::cerr << "Error >>> Path does not end at (" << maze.getRows() - 1 << ", " << maze.getCols() - 1 << ").\n";
+        cerr << "Error >>> Path does not end at (" << maze.getRows() - 1 << ", " << maze.getCols() - 1 << ").\n";
 
         return false;
     }
