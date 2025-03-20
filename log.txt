@@ -5,7 +5,7 @@ Processing folder: load\Test00_FilesDontExistOrWrongFormat
 No path file found in load\Test00_FilesDontExistOrWrongFormat. Skipping... 
  
 Running: "src\bin\maze.exe" "maze.txt" "path.txt" 
-Path file couldn't be oppened >>> path.txt
+Valid Path!
  
 -------------------- 
  

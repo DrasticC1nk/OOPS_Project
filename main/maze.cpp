@@ -99,19 +99,6 @@ bool Maze2D::isValidMove(int x, int y) const
 int Maze2D::getRows() const { return rows; }
 int Maze2D::getCols() const { return cols; }
 
-void Maze2D::printMaze() const 
-{
-    for(const auto& row : grid) 
-    {
-        for(int cell : row) 
-        {
-            cout << (cell ? "1 " : "0 ");
-        }
-
-        cout << endl;
-    }
-}
-
 Path1D::Path1D(const string& filename) 
 {
     if(!isValidFileFormat(filename)) 
@@ -156,7 +143,7 @@ Path1D::Path1D(const string& filename)
 
 bool Path1D::isValidPath(const Maze2D& maze, vector<Point2D>& pathTrace) const 
 {
-    Point2D pos(0, 0);
+    Point2D pos;
 
     pathTrace.push_back(pos);
 
