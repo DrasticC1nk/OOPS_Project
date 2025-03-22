@@ -40,13 +40,18 @@ int SDL_main(int argc, char* argv[])
     //STORES THE RESULT OF 'isValidPath' THAT RETURNS A BOOL
     bool valid = path.isValidPath(maze, pathTrace); //DETAILED EXPLANATION ABOUT WHAT IT DOES IN 'maze.hpp'
 
+    //WE MAKE A VECTOR OF PAIRS OF INTEGERS TO STORE THE PATHTRACE WE CALCULATED ERALIER. WE NEED THIS SO THAT I CAN SEND THE PATH TO 
+    //OUR RENDERER TO DRAW THE PATH ON THE SCREEN. IT WAS NOT COMPILING WITH 'Point2D' SO I HAD TO CONVERT IT TO PAIRS OF INTEGERS. HENCE
+    //THE CONVERSION
     vector<pair<int, int>> convertedPath;
-
+    
+    //POPULATING THE 'convertedPath' VECTOR
     for(const auto& point : pathTrace) 
     {
         convertedPath.push_back({point.x, point.y});
     }
 
+    //PRINTING THE RESULT WE CALCULATED EARLIER
     cout << (valid ? "Valid Path!" : "Invalid Path!") << endl;
 
     Renderer renderer(640, 480);

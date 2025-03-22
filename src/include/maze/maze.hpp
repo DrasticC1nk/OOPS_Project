@@ -23,25 +23,30 @@ struct Point2D
     Point2D(int x_ = 0, int y_ = 0) : x(x_), y(y_) {} 
 };
  
+//CLASS DEFINITION/INTERFACE FOR 'Maze2D'
 class Maze2D 
 {
 private:
 
+    //MEMBER VARIABLES
     int rows, cols;
     
+    //A 2D VECTOR TO STORE THE MAZE
     vector<vector<int>> grid;
 
 public:
 
+    //CONSTRUCTING THE MAZE FROM THE FILE
     explicit Maze2D(const string& filename);
 
+    //A BASIC MOVE VALIDATOR FUNCTION
     bool isValidMove(int x, int y) const;
 
+    //GETTER FUNCTIONS DOE ROWS AND COLLUMS
     int getRows() const;
     int getCols() const;
 
-    void printMaze() const;
-
+    //GETTER FUNCTION FOR THE WHOLE GRID
     const vector<vector<int>>& getGrid() const { return grid; }
 };
 

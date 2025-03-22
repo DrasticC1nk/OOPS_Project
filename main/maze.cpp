@@ -28,6 +28,7 @@ Maze2D::Maze2D(const string& filename)
         exit(1);
     }
 
+    //EXPLAINED THIS IN THE 'Path1D' CONSTRUCTOR 
     ifstream file("load/" + filename, ios::binary); 
 
     if(!file) 
@@ -37,36 +38,59 @@ Maze2D::Maze2D(const string& filename)
         exit(1);
     }
 
+    //CREATING A STRING 'line' TO STORE EACH LINE OF THE MAZE FILE TO MAKE IT EASY TO PROCESS THE FILE
     string line;
+
+    //CREATING A TEMPORARY 3D VECTOR TO STROE THE MAZE
     vector<vector<int>> tempGrid;
 
+    //WE ARE ABOUT TO READ THE FILE LINE BY LINE AND THEN CHARACTER BY CHARACTER TO POPULATE THE 'grid' VECTOR. THE 'getline()' FUNCTION
+    //READS THE FILE LINE BY LINE AND STORING IT AS A STRING IN 'line'. IT READS THE LINE UNTIL IT ENCOUNTERS A NEW LINE CHARACTER '\n'
+    //OR UNTIL IT REACHES EOF.  IT KEEPS RETURNING TRUE TILL THERE ARE LINES AND KEEPS THE LOOP RUNNING. IT ITERATES OVER THE LINES 
+    //AUTOMATICALLY UNTILL EOF.
     while(getline(file, line)) 
     {
+        //CREATING A VECTOR 'row' TO STORE THE ROWS OF THE MAZE AFTER READING
         vector<int> row;
-        istringstream iss(line);
 
+        //USING THIS TO TREAT THE STRING 'line' AS AN INPUT STREA(AS IF IT WAS GIVEN AS AN INPUT VIA KEAYBOARD) TO MAKE IT EASY FOR US
+        //TO READ IT CHARACTER BY CHARACTER. 
+        istringstream iss(line);
+        
+        //EVERY CHARACTER IN THE STRING 'line' IS READ AND STORED IN 'cell' AND THEN CONVERTED TO AN INTEGER AND STORED IN 'row'
         char cell;
 
+        //THIS LOOPS READS EVERY CHARACTER IN THE STRING 'line' WHILE AUTOMATICALLY SKIPPING THE WHITESPACES AND NEW LINE CHARACTERS
         while(iss >> cell) 
-        {
-            if (cell != '0' && cell != '1') 
+        {   
+            //MAKING SURE THAT THE FILE DOESN'T CONTAIN ANYTHING OTHER THAN '0' AND '1'. WE THROW AN ERROR OTHERWISE
+            if(cell != '0' && cell != '1') 
             {
                 cerr << "Invalid character '" << cell << "' in maze file. Only '0' and '1' are allowed.\n";
 
                 exit(1);
             }
 
+            //HERE WE CONVERT THE CHAR VALUE WE HAVE IN CELL TO AN INTEGER BACAUSE THEY ARE EASY TO TREAT WHEN WE WANT TO DO ARITHMATIC
+            //OBVIOUSLY. ALSO OUR RENDERER REQUIRES INTEGERS SO WE SAVE SOME TIME AND SPACE BY CONVERTING IT HERE. TO CONVERT, WE ARE 
+            //SUBSTRACTING THE ASCII VALUE OF CAHRACTER '0' FROM THE ASCII VALUE OF THE CHARACTER IN 'cell' TO GET THE INTEGER VALUE.
+            //LET'S SAY 'cell' HOLDS CHAR '1' WHICH HAS AN ASCII VALUE OF 49, AND THE ASCII OF CHAR '0' IS 48 SO 49 - 48 = 1. SO '1' 
+            //IS CONVERTED TO 1. THIS CAN BE DONE WITH ANY NUMERIC CHARACTER TO CONVERT IT TO AN INTEGER NOT JUST '1' AND '0'.
+            //WE POPULATE THE 'row' VECTOR
             row.push_back(cell - '0');  
         }
 
+        //WE CHECK IF THE ROW IS NOT EMPTY AND THEN PUSH IT TO THE 'tempGrid' VECTOR
         if(!row.empty()) 
         {
             tempGrid.push_back(row);
         }
     }
 
+    //ONCE EVERYTHING IS DONE, WE CLOSE THE FILE
     file.close();
 
+    //CHECKING IF THE FILE IS EMPTY OR IMPROPERLY FORMATTED AND THROWING AN ERROR IF IT IS
     if(tempGrid.empty()) 
     {
         cerr << "Error >>> Maze file is empty or improperly formatted.\n";
@@ -74,9 +98,11 @@ Maze2D::Maze2D(const string& filename)
         exit(1);
     }
 
+    //WE GET THE SIZE OF THE ROWS AND COLLUMS OF THE MAZE
     rows = tempGrid.size();
     cols = tempGrid[0].size();
 
+    //CHECKING IF THE ROWS ARE NOT OF THE SAME LENGTH AND THROWING AN ERROR IF THEY ARE NOT
     for(const auto& row : tempGrid) 
     {
         if(row.size() != cols) 
@@ -87,6 +113,7 @@ Maze2D::Maze2D(const string& filename)
         }
     }
 
+    //CHECKING IF THE MAZE DOESN'T START AT (0,0) AND THROWING AN ERROR IF IT DOESN'T
     if(tempGrid[0][0] == 0) 
     {
         cerr << "Error >>> Maze must start at (0,0) with '1' (open path).\n";
@@ -94,14 +121,23 @@ Maze2D::Maze2D(const string& filename)
         exit(1);
     }
 
+    //HERE WE MOVE THE DATA FROM 'tempGrid' TO 'grid' USING MOVE SEMANTICS TO AVOID COPYING THE DATA. THE MOVE SEMANTICS WORKS BY 
+    //TRANSFERRING THE OWNERSHIP OF THE DATA FROM ONE OBJECT/CONTAINER/VARIABLE TO ANOTHER WITHOUT COPYING IT SAVIN TIME AND MEMORY.
+    //IT CONVERTS THE 'tempGrid' TO A R-VALUE(TEMPORARY VALUES/EXPRESSIONS/OBJECTS THAT DO NOT PRESIST AFTER. FOR EXAMPLE LET'S
+    //TAKE AN 'int x = 5;' HERE 'x' IS AN NAMED OBJECT OR AN LVALUE. NO LET'S TAKE 'int y = x + 5'. HERE EXPRESSION 'x + 5' IS AN
+    //RVALUE REFFERENCE OR A TEMPORARY OBJECT i.e IT WON'T PRESIST AFTER THE EXPRESSION IS EVALUATED. BUT 'y' REMAINS AN LVALUE) AND
+    //THEN MOVES IT TO 'grid'. SO NOW 'tempGrid' EXISTS BUT IS EMPTY AND 'grid' IS POPULATED. ALSO, 'grid' IS A MEMBER VARIABLE OF
+    //'Maze2D' CLASS SO IT WILL BE PRESISTENT THROUGHOUT THE LIFETIME OF THE OBJECT AND WAS CREATED WITH THE OBJECT
     grid = move(tempGrid);
 }
 
+//THIS FUNCTION CHECKS IF THE MOVE IS WITHIN THE BOUNDS OF THE MAZE AND IF IT IS A VALID MOVE
 bool Maze2D::isValidMove(int x, int y) const 
 {
     return (x >= 0 && x < rows && y >= 0 && y < cols && grid[x][y] == 1);
 }
 
+//THESE FUNCTIONS ARE USED TO GET THE ROWS AND COLLUMS OF THE MAZE 
 int Maze2D::getRows() const { return rows; }
 int Maze2D::getCols() const { return cols; }
 
@@ -219,5 +255,6 @@ bool Path1D::isValidPath(const Maze2D& maze, vector<Point2D>& pathTrace) const /
         return false;
     }
 
+    //IF CONTROL FLOW REACHES HERE, IT MEANS THAT THE PATH IS VALID
     return true;
 }
